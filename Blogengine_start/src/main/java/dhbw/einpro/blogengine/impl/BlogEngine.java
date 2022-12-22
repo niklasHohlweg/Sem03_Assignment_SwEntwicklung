@@ -1,9 +1,6 @@
 package dhbw.einpro.blogengine.impl;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 import dhbw.einpro.blogengine.exceptions.DuplicateEmailException;
 import dhbw.einpro.blogengine.exceptions.DuplicateUserException;
@@ -200,13 +197,11 @@ public class BlogEngine implements IBlogEngine
     @Override
     public IPost findPostById(int p_postId) {
 
-        for(int i = 0; i < blogEnginePosts.size(); i++){
+        for (IPost blogEnginePost: blogEnginePosts) {
 
-            IPost myPost = blogEnginePosts.get(i);
+            if (blogEnginePost.getId() == p_postId){
 
-            if(myPost.getId() == p_postId){
-
-                return myPost;
+                return blogEnginePost;
 
             }
 
@@ -299,9 +294,18 @@ public class BlogEngine implements IBlogEngine
     @Override
     public List<IPost> sortPostsByTitle() {
 
+        List<IPost> sortedPosts = blogEnginePosts;
 
+        Collections.sort(sortedPosts, new Comparator<IPost>() {
 
-        return null;
+            public int compare(IPost o1, IPost o2) {
+
+                return o1.getTitle().compareTo(o2.getTitle());
+
+            }
+        });
+
+        return sortedPosts;
     }
 
     /**
