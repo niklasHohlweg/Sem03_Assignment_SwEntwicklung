@@ -24,9 +24,9 @@ public class Post implements IPost
     private IUser user;
     private IBlogEngine blogEngine;
     private int postId;
-    private List<IComment> comments;
-    private List<IUser> likedUsers;
-    private List<IUser> dislikedUsers;
+    private List<IComment> comments = new ArrayList<IComment>();
+    private List<IUser> likedUsers = new ArrayList<IUser>();
+    private List<IUser> dislikedUsers = new ArrayList<IUser>();
     private String postTitle;
     private String postContent;
     private IUser postAuthor;
@@ -108,7 +108,7 @@ public class Post implements IPost
 
         }
 
-        if (blogEngine.containsUser(p_comment.getAuthor()) == false){
+        if (!blogEngine.containsUser(p_comment.getAuthor())){
 
             throw new UserNotFoundException();
 
@@ -177,7 +177,7 @@ public class Post implements IPost
         }
 
         if(!likedUsers.contains(p_person)){
-            if (!dislikedUsers.contains(p_person))         {
+            if (!dislikedUsers.contains(p_person)){
 
                 likedUsers.add(p_person);
 

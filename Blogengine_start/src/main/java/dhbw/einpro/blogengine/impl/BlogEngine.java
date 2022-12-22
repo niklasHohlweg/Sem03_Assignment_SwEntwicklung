@@ -21,8 +21,8 @@ import dhbw.einpro.blogengine.interfaces.IUser;
 public class BlogEngine implements IBlogEngine
 {
 
-    private List<IUser> blogEngineUsers;
-    private List<IPost> blogEnginePosts;
+    private List<IUser> blogEngineUsers = new ArrayList<IUser>();
+    private List<IPost> blogEnginePosts = new ArrayList<IPost>();
     private int postId = 0;
 
     /**
@@ -52,7 +52,22 @@ public class BlogEngine implements IBlogEngine
     @Override
     public boolean addUser(IUser p_user) throws DuplicateEmailException, DuplicateUserException {
 
-        return false;
+            for (IUser blogEngineUser : blogEngineUsers){
+
+                if (p_user.getEmail().equals(blogEngineUser.getEmail())){
+
+                    throw new DuplicateEmailException();
+
+                }
+                if(p_user.equals(blogEngineUser)){
+
+                    throw new DuplicateUserException();
+
+                }
+
+            }
+
+        return blogEngineUsers.add(p_user);
 
     }
 
@@ -66,17 +81,7 @@ public class BlogEngine implements IBlogEngine
     @Override
     public boolean removeUser(IUser p_user) {
 
-        if (containsUser(p_user)){
-
-            blogEngineUsers.remove(p_user);
-            return true;
-
-        }
-        else {
-
-            return false;
-
-        }
+        return blogEngineUsers.remove(p_user);
 
     }
 
@@ -169,22 +174,21 @@ public class BlogEngine implements IBlogEngine
 
         List<IPost> foundPosts = null;
 
-        for(int i = 0; i < blogEnginePosts.size(); i++){
-
-            IPost myPost = blogEnginePosts.get(i);
+        for (IPost blogEnginePost: blogEnginePosts) {
 
             User myUserA = (User) p_author;
-            User myUserB = (User) myPost.getAuthor();
+            User myUserB = (User) blogEnginePost.getAuthor();
 
             if(myUserA.compareTo(myUserB) == 0){
 
-                foundPosts.add(myPost);
+                foundPosts.add(blogEnginePost);
 
             }
 
         }
 
         return foundPosts;
+
     }
 
     /**
@@ -221,11 +225,9 @@ public class BlogEngine implements IBlogEngine
     @Override
     public boolean containsPost(int p_postId) {
 
-        for(int i = 0; i < blogEnginePosts.size(); i++){
+        for (IPost blogEnginePost: blogEnginePosts) {
 
-            IPost myPost = blogEnginePosts.get(i);
-
-            if(myPost.getId() == p_postId){
+            if (blogEnginePost.getId() == postId){
 
                 return true;
 
@@ -246,12 +248,12 @@ public class BlogEngine implements IBlogEngine
     @Override
     public boolean containsUser(IUser user) {
 
-        for (int i = 0; i < blogEngineUsers.size(); i++){
+        for (IUser blogEngineUser: blogEngineUsers) {
 
-            User myUserA = (User) blogEngineUsers.get(i);
-            User myUSerB = (User) user;
+            User myUserA = (User) blogEngineUser;
+            User myUserB = (User) user;
 
-            if (myUserA.compareTo(myUSerB) == 0){
+            if (myUserA.compareTo(myUserB) == 0){
 
                 return true;
 
@@ -275,13 +277,11 @@ public class BlogEngine implements IBlogEngine
     @Override
     public IUser findUserByEmail(String p_email) throws UserNotFoundException {
 
-        for(int i = 0; i < blogEngineUsers.size(); i++){
+        for (IUser blogEngineUser: blogEngineUsers) {
 
-            IUser myUser = blogEngineUsers.get(i);
+            if (blogEngineUser.getEmail().equals(p_email)){
 
-            if(myUser.getEmail().compareTo(p_email) == 0){
-
-                return myUser;
+                return blogEngineUser;
 
             }
 
@@ -298,6 +298,9 @@ public class BlogEngine implements IBlogEngine
      */
     @Override
     public List<IPost> sortPostsByTitle() {
+
+
+
         return null;
     }
 
@@ -312,13 +315,11 @@ public class BlogEngine implements IBlogEngine
 
         List<IPost> foundPosts = null;
 
-        for(int i = 0; i < blogEnginePosts.size(); i++){
+        for (IPost blogEnginePost: blogEnginePosts) {
 
-            IPost myPost = blogEnginePosts.get(i);
+            if (blogEnginePost.getTitle().equals(title)){
 
-            if(myPost.getTitle().compareTo(title) == 0){
-
-                foundPosts.add(myPost);
+                foundPosts.add(blogEnginePost);
 
             }
 
